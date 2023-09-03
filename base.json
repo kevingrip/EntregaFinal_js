@@ -1,0 +1,13 @@
+{
+    "empanadas": [
+      { "id": 1, "catalogo": "Jamon y Queso", "tipo": "Clasicas", "precioHorno": 200, "precioFrita": 250, "imagen":"./Imagenes/jq.jpg" },
+      { "id": 2, "catalogo": "Carne", "tipo": "Clasicas", "precioHorno": 200, "precioFrita": 250, "imagen":"./Imagenes/carne.jpg" },
+      { "id": 3, "catalogo": "Pollo", "tipo": "Clasicas", "precioHorno": 200, "precioFrita": 250, "imagen":"Imagenes/pollo.jpg" },
+      { "id": 4, "catalogo": "Verdura", "tipo": "Clasicas", "precioHorno": 200, "precioFrita": 250, "imagen":"./Imagenes/verdura.jpeg" },
+      { "id": 5, "catalogo": "4 quesos", "tipo": "Especial", "precioHorno": 300, "precioFrita": 350, "imagen":"Imagenes/4quesos.png" },
+      { "id": 6, "catalogo": "Roquefort", "tipo": "Especial", "precioHorno": 300, "precioFrita": 350, "imagen":"Imagenes/roquefort.jpg" },
+      { "id": 7, "catalogo": "Vacio y provoleta", "tipo": "Especial", "precioHorno": 300, "precioFrita": 350, "imagen":"Imagenes/vacio.jpg" },
+      { "id": 8, "catalogo": "Champignon", "tipo": "Especial", "precioHorno": 300, "precioFrita": 350, "imagen":"Imagenes/champi.jpg" }
+    ]
+}
+  
