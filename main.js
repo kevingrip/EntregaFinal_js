@@ -1,4 +1,4 @@
-let empanadasData; 
+let empanadasData;
 let recargarPag = false;
 
 fetch('base.json')
@@ -125,6 +125,7 @@ function actualizarCarrito() {
     const vaciarCarrito = document.getElementById('vaciarCarrito');
     const mostrarTotal = document.getElementById('mostrartotal');
     const datoInput = document.getElementById('datoInput');
+    const mensaje = document.getElementById('mensaje');
     const nombre = document.getElementById('nombre');
     const telefono = document.getElementById('telefono');
     const direccion = document.getElementById('direccion');
@@ -135,7 +136,7 @@ function actualizarCarrito() {
 
     carrito.forEach(empanada => {
         const listItem = document.createElement("li");
-        listItem.innerHTML = `<div class = "anchoLinea"><div class = "anchoTexto">
+        listItem.innerHTML = `<div class="anchoLinea"><div class="anchoTexto">
         Cantidad: ${empanada.cantidad} - Tipo: ${empanada.tipo} - $${(empanada.tipo === 'Horno' ? empanada.precioHorno : empanada.precioFrita) * empanada.cantidad} - ${empanada.catalogo} </div>
         ${empanada.tipo === 'Horno' ? `<div class="centrarBotones"> <button id='boton' class="btn btn-dark" onclick="incrementarCantidad(${empanada.id}, 'Horno')">+</button> <button id='boton'  class="btn btn-dark" onclick="decrementarCantidad(${empanada.id}, 'Horno')">-</button></div> ` : 
         `<div class="centrarBotones"><button id='boton' class="btn btn-dark" onclick="incrementarCantidad(${empanada.id}, 'Frita')">+</button> <button id='boton' class="btn btn-dark" onclick="decrementarCantidad(${empanada.id}, 'Frita')">-</button></div>`}`;
@@ -151,6 +152,7 @@ function actualizarCarrito() {
         vaciarCarrito.style.display = 'block';
         mostrarTotal.style.display = 'block';
         datoInput.style.display = 'block';
+        mensaje.style.display = 'block'; // Mostrar el mensaje de estado
         nombre.style.display = 'block';
         telefono.style.display = 'block';
         direccion.style.display = 'block';
@@ -160,13 +162,14 @@ function actualizarCarrito() {
         vaciarCarrito.style.display = 'none';
         mostrarTotal.style.display = 'none';
         datoInput.style.display = 'none';
+        mensaje.style.display = 'none'; // Ocultar el mensaje de estado
         nombre.style.display = 'none';
         telefono.style.display = 'none';
         direccion.style.display = 'none';
     }
 }
 
-const pagado = document.getElementById('pagado');
+const mensaje = document.getElementById('mensaje');
 
 function vaciarCarrito() {
     carrito.length = 0;
@@ -183,28 +186,28 @@ document.getElementById("vaciarCarrito").addEventListener("click", () => {
     });
 
     swalWithBootstrapButtons.fire({
-        title: 'Esta seguro?',
-        text: "No podra revertirlo",
+        title: '¿Está seguro?',
+        text: "No podrá revertirlo",
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Si, vaciar!',
-        cancelButtonText: 'No, cancelar!',
+        confirmButtonText: 'Sí, vaciar',
+        cancelButtonText: 'No, cancelar',
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
             swalWithBootstrapButtons.fire(
-                'Borrado!',
+                '¡Borrado!',
                 'Tu carrito ha sido vaciado.',
                 'success'
             );
-            pagado.innerHTML = '';
+            mensaje.innerHTML = '';
             vaciarCarrito();
         } else if (
             result.dismiss === Swal.DismissReason.cancel
         ) {
             swalWithBootstrapButtons.fire(
                 'Cancelado',
-                'Tu carrito esta a salvo',
+                'Tu carrito está a salvo',
                 'error'
             );
         }
@@ -219,33 +222,38 @@ document.getElementById("pagar").addEventListener("click", () => {
     const dir = document.getElementById("direccion").value;
 
     if (!nombreUsuario){
-        pagado.innerHTML = `Por favor ingresa tu nombre y apellido`;
+        mensaje.innerHTML = `Por favor ingresa tu nombre y apellido`;
     }else{
         if (!tel){
-            pagado.innerHTML = `Por favor ingresa tu telefono`;
+            mensaje.innerHTML = `Por favor ingresa tu teléfono`;
         }else{
-            if (!direccion){
-                pagado.innerHTML = `Por favor ingresa tu direccion`;
+            if (!dir){
+                mensaje.innerHTML = `Por favor ingresa tu dirección`;
             }else{
                 if (!isNaN(total) && !isNaN(pagoCon) && pagoCon >= total) {
                     const vuelto = pagoCon - total;
             
-                    pagado.innerHTML = '';
+                    mensaje.innerHTML = '';
                     recargarPag = true;
                     Swal.fire(
-                        'Pago Aprobado!',
-                        `Tus empanadas estan en camino! Su vuelto es: $${vuelto.toFixed(2)}`,
+                        '¡Pago Aprobado!',
+                        `Tus empanadas están en camino! Su vuelto es: $${vuelto.toFixed(2)}`,
                         'success'
                     );
                     guardarDatosLocal(nombreUsuario, dir, tel, vuelto);
                     vaciarCarrito();
                     datoInput.value = '';
-                    nombreUsuario.value = '';
-                    tel.value = '';
-                    dir.value = '';
+                    nombre.value = '';
+                    telefono.value = '';
+                    direccion.value = '';
             
                 } else {
-                    pagado.innerHTML = `El monto ingresado es insuficiente.`;
+                    vaciarCarrito();
+                    mensaje.innerHTML = `El monto ingresado es insuficiente.`;
+                    datoInput.value = '';
+                    nombre.value = '';
+                    telefono.value = '';
+                    direccion.value = '';          
                 }
             }
         }
