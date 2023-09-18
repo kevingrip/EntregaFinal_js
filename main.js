@@ -201,6 +201,10 @@ document.getElementById("vaciarCarrito").addEventListener("click", () => {
                 'success'
             );
             mensaje.innerHTML = '';
+            datoInput.value = '';
+            nombre.value = '';
+            telefono.value = '';
+            direccion.value = '';
             vaciarCarrito();
         } else if (
             result.dismiss === Swal.DismissReason.cancel
@@ -248,12 +252,7 @@ document.getElementById("pagar").addEventListener("click", () => {
                     direccion.value = '';
             
                 } else {
-                    vaciarCarrito();
                     mensaje.innerHTML = `El monto ingresado es insuficiente.`;
-                    datoInput.value = '';
-                    nombre.value = '';
-                    telefono.value = '';
-                    direccion.value = '';          
                 }
             }
         }
