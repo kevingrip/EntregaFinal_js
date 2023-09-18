@@ -1,7 +1,6 @@
-let empanadasData; // Variable para almacenar los datos de las empanadas
+let empanadasData; 
 let recargarPag = false;
 
-// Realiza la solicitud para obtener el archivo JSON
 fetch('base.json')
   .then(response => {
     if (!response.ok) {
@@ -10,13 +9,10 @@ fetch('base.json')
     return response.json();
   })
   .then(data => {
-    // Almacena los datos de las empanadas en la variable empanadasData
     empanadasData = data.empanadas;
 
-    // Inicializa la lista de empanadas disponibles
     const empanadasList = document.getElementById('empanadasList');
 
-    // Recorre cada empanada en los datos y crea elementos <li> para mostrarlos
     empanadasData.forEach(empanada => {
       const cardContainer = document.createElement('div');
       cardContainer.classList.add('col-md-3', 'mb-4');
@@ -67,12 +63,10 @@ fetch('base.json')
 
 const carrito = [];
 
-// Función para agregar una empanada al carrito
 function agregarAlCarrito(empanadaId, tipo) {
     const empanadaSeleccionada = empanadasData.find(empanada => empanada.id === empanadaId);
 
     if (empanadaSeleccionada) {
-        // Clona la empanada para evitar modificar la original
         const empanadaEnCarrito = { ...empanadaSeleccionada };
         empanadaEnCarrito.tipo = tipo;
         const Toast = Swal.mixin({
@@ -92,14 +86,11 @@ function agregarAlCarrito(empanadaId, tipo) {
           title: `Empanada de ${empanadaEnCarrito["catalogo"]} ${tipo === "Horno" ? "al " + tipo : tipo} agregada al carrito`
         })
 
-        // Verificar si la empanada ya está en el carrito
         const existeEnCarrito = carrito.find(item => item.id === empanadaEnCarrito.id && item.tipo === tipo);
 
         if (existeEnCarrito) {
-            // Si existe, aumenta la cantidad en 1
             existeEnCarrito.cantidad++;
         } else {
-            // Si no existe, agrega la empanada al carrito con cantidad 1
             empanadaEnCarrito.cantidad = 1;
             carrito.push(empanadaEnCarrito);
         }
@@ -108,7 +99,6 @@ function agregarAlCarrito(empanadaId, tipo) {
     }
 }
 
-// Función para incrementar la cantidad de una empanada en el carrito
 function incrementarCantidad(empanadaId, tipo) {
     const empanadaEnCarrito = carrito.find(empanada => empanada.id === empanadaId && empanada.tipo === tipo);
 
@@ -118,7 +108,6 @@ function incrementarCantidad(empanadaId, tipo) {
     }
 }
 
-// Función para decrementar la cantidad de una empanada en el carrito
 function decrementarCantidad(empanadaId, tipo) {
     const empanadaEnCarrito = carrito.find(empanada => empanada.id === empanadaId && empanada.tipo === tipo);
 
@@ -128,7 +117,6 @@ function decrementarCantidad(empanadaId, tipo) {
     }
 }
 
-// Función para actualizar la vista del carrito
 function actualizarCarrito() {
     const carritoList = document.getElementById("carritoList");
     const totalElement = document.getElementById("total");
@@ -141,13 +129,10 @@ function actualizarCarrito() {
     const telefono = document.getElementById('telefono');
     const direccion = document.getElementById('direccion');
 
-    // Limpia el contenido anterior del carrito
     carritoList.innerHTML = "";
 
-    // Calcula el total
     let total = 0;
 
-    // Recorre las empanadas en el carrito
     carrito.forEach(empanada => {
         const listItem = document.createElement("li");
         listItem.innerHTML = `<div class = "anchoLinea"><div class = "anchoTexto">
@@ -158,7 +143,6 @@ function actualizarCarrito() {
         total += (empanada.tipo === 'Horno' ? empanada.precioHorno : empanada.precioFrita) * empanada.cantidad;
     });
 
-    // Actualiza el total en el HTML
     totalElement.innerText = total.toFixed(2);
 
     if (carrito.length > 0){
@@ -184,13 +168,11 @@ function actualizarCarrito() {
 
 const pagado = document.getElementById('pagado');
 
-// Función para vaciar el carrito
 function vaciarCarrito() {
     carrito.length = 0;
     actualizarCarrito();
 }
 
-// vaciar el carrito
 document.getElementById("vaciarCarrito").addEventListener("click", () => {
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
@@ -216,7 +198,7 @@ document.getElementById("vaciarCarrito").addEventListener("click", () => {
                 'success'
             );
             pagado.innerHTML = '';
-            vaciarCarrito(); // Llamar a la función para vaciar el carrito
+            vaciarCarrito();
         } else if (
             result.dismiss === Swal.DismissReason.cancel
         ) {
@@ -229,18 +211,17 @@ document.getElementById("vaciarCarrito").addEventListener("click", () => {
     });
 });
 
-// pagar
 document.getElementById("pagar").addEventListener("click", () => {
     const total = parseFloat(document.getElementById("total").innerText.replace("$", ""));
     const pagoCon = parseFloat(document.getElementById("datoInput").value);
-    const nombre = document.getElementById("nombre").value;
-    const telefono = document.getElementById("telefono").value;
-    const direccion = document.getElementById("direccion").value;
+    const nombreUsuario = document.getElementById("nombre").value;
+    const tel = document.getElementById("telefono").value;
+    const dir = document.getElementById("direccion").value;
 
-    if (!nombre){
+    if (!nombreUsuario){
         pagado.innerHTML = `Por favor ingresa tu nombre y apellido`;
     }else{
-        if (!telefono){
+        if (!tel){
             pagado.innerHTML = `Por favor ingresa tu telefono`;
         }else{
             if (!direccion){
@@ -256,9 +237,12 @@ document.getElementById("pagar").addEventListener("click", () => {
                         `Tus empanadas estan en camino! Su vuelto es: $${vuelto.toFixed(2)}`,
                         'success'
                     );
-                    vaciarCarrito(); // Llamar a la función para vaciar el carrito
+                    guardarDatosLocal(nombreUsuario, dir, tel, vuelto);
+                    vaciarCarrito();
                     datoInput.value = '';
-                    
+                    nombre.value = '';
+                    telefono.value = '';
+                    direccion.value = '';
             
                 } else {
                     pagado.innerHTML = `El monto ingresado es insuficiente.`;
@@ -266,9 +250,18 @@ document.getElementById("pagar").addEventListener("click", () => {
             }
         }
     }
-
-    
 });
 
-// Inicializa la vista del carrito
+function guardarDatosLocal(nombreUsuario, dir, tel, vuelto) {
+    const datos = JSON.parse(localStorage.getItem('datosClientes')) || [];
+    const nuevoCliente = {
+        nombreUsuario: nombreUsuario,
+        dir: dir,
+        tel: tel,
+        facturado: vuelto
+    };
+    datos.push(nuevoCliente);
+    localStorage.setItem('datosClientes', JSON.stringify(datos));
+}
+
 actualizarCarrito();
