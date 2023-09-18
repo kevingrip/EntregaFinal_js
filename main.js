@@ -240,9 +240,9 @@ document.getElementById("pagar").addEventListener("click", () => {
                     guardarDatosLocal(nombreUsuario, dir, tel, vuelto);
                     vaciarCarrito();
                     datoInput.value = '';
-                    nombre.value = '';
-                    telefono.value = '';
-                    direccion.value = '';
+                    nombreUsuario.value = '';
+                    tel.value = '';
+                    dir.value = '';
             
                 } else {
                     pagado.innerHTML = `El monto ingresado es insuficiente.`;
